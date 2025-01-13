@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<sspaceex version="0.2" math="SpaceEx"> math="SpaceEx">
+  <component id="D">
+    <param name="y3" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="theta3" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="beta2" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="beta3" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="alpha" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="v" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <param name="L1" type="real" local="false" d1="1" d2="1" dynamics="const" />
+    <param name="L2" type="real" local="false" d1="1" d2="1" dynamics="const" />
+    <param name="L3" type="real" local="false" d1="1" d2="1" dynamics="const" />
+    <param name="M1" type="real" local="false" d1="1" d2="1" dynamics="const" />
+    <param name="clock" type="real" local="false" d1="1" d2="1" dynamics="any" />
+    <location id="1" name="Backward_Straight_Line" x="339.0" y="176.0" width="308.0" height="200.0">
+      <invariant>v == -1</invariant>
+      <flow>y3' == v * cos(beta3) * cos(beta2) * sin(theta3) &amp;
+theta3' == (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta3' == (v / L2) * (tan(beta2) - (M1 / L1) * tan(alpha)) - (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta2' == (v / L1) * tan(alpha) - (v / L2) * sin(beta2)</flow>
+    </location>
+    <location id="2" name="Backward_Arc" x="880.0" y="175.0" width="314.0" height="200.0">
+      <invariant>v == -1</invariant>
+      <flow>y3' == v * cos(beta3) * cos(beta2) * sin(theta3) &amp;
+theta3' == (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta3' == (v / L2) * (tan(beta2) - (M1 / L1) * tan(alpha)) - (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta2' == (v / L1) * tan(alpha) - (v / L2) * sin(beta2)</flow>
+    </location>
+    <location id="3" name="Forward" x="881.0" y="507.0" width="338.0" height="180.0">
+      <invariant>v == 1</invariant>
+      <flow>y3' == v * cos(beta3) * cos(beta2) * sin(theta3) &amp;
+theta3' == (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta3' == (v / L2) * (tan(beta2) - (M1 / L1) * tan(alpha)) - (v / L3) * sin(beta3) * cos(beta2) &amp;
+beta2' == (v / L1) * tan(alpha) - (v / L2) * sin(beta2)</flow>
+    </location>
+    <transition source="1" target="2">
+      <label>switch_to_arc</label>
+      <guard>beta3 &gt;= 1.5</guard>
+      <assignment>v := -1</assignment>
+      <labelposition x="-96.0" y="-14.0" width="198.0" height="100.0" />
+    </transition>
+    <transition source="2" target="3">
+      <label>switch_to_forward</label>
+      <guard>y3 &gt;= 0.6</guard>
+      <assignment>v := 1</assignment>
+      <labelposition x="0.0" y="-38.0" width="248.0" height="80.0" />
+    </transition>
+    <transition source="3" target="1">
+      <label>realign</label>
+      <guard>beta2 &lt;= 0.1</guard>
+      <assignment>v := -1</assignment>
+      <labelposition x="-267.0" y="1.0" width="288.0" height="88.0" />
+    </transition>
+  </component>
+  <component id="A">
+    <param name="y3" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="theta3" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="beta2" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="beta3" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="alpha" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="v" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <param name="L1" type="real" local="false" d1="1" d2="1" dynamics="const" controlled="true" />
+    <param name="L2" type="real" local="false" d1="1" d2="1" dynamics="const" controlled="true" />
+    <param name="L3" type="real" local="false" d1="1" d2="1" dynamics="const" controlled="true" />
+    <param name="M1" type="real" local="false" d1="1" d2="1" dynamics="const" controlled="true" />
+    <param name="clock" type="real" local="false" d1="1" d2="1" dynamics="any" controlled="true" />
+    <bind component="D" as="D_1" x="858.0" y="151.0">
+      <map key="y3">y3</map>
+      <map key="theta3">theta3</map>
+      <map key="beta2">beta2</map>
+      <map key="beta3">beta3</map>
+      <map key="alpha">alpha</map>
+      <map key="v">v</map>
+      <map key="L1">L1</map>
+      <map key="L2">L2</map>
+      <map key="L3">L3</map>
+      <map key="M1">M1</map>
+      <map key="clock">clock</map>
+    </bind>
+  </component>
+</sspaceex>
+
